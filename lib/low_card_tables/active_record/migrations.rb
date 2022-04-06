@@ -75,10 +75,17 @@ module LowCardTables
       end
 
       included do
-        alias_method_chain :create_table, :low_card_support
-        alias_method_chain :add_column, :low_card_support
-        alias_method_chain :remove_column, :low_card_support
-        alias_method_chain :change_table, :low_card_support
+        alias_method :create_table_without_low_card_support, :create_table
+        alias_method :create_table, :create_table_with_low_card_support
+
+        alias_method :add_column_without_low_card_support, :add_column
+        alias_method :add_column, :add_column_with_low_card_support
+
+        alias_method :remove_column_without_low_card_support, :remove_column
+        alias_method :remove_column, :remove_column_with_low_card_support
+
+        alias_method :change_table_without_low_card_support, :change_table
+        alias_method :change_table, :change_table_with_low_card_support
       end
 
       class << self
