@@ -117,10 +117,17 @@ module LowCardTables
 
       def type_cast_id(id)
         column = @low_card_model.columns_hash[@low_card_model.primary_key]
+
+        type_cast(column, id)
+      end
+
+      def type_cast(column, value)
         if column.respond_to?(:type_cast_from_database)
-          column.type_cast_from_database(id)
+          column.type_cast_from_database(value)
+        elsif column.respond_to?(:type_cast)
+          column.type_cast(value)
         else
-          column.type_cast(id)
+          ::ActiveRecord::Base.connection.type_cast(value, column) || value
         end
       end
 
@@ -603,7 +610,7 @@ equivalent of 'LOCK TABLE'(s) in your database.}
           column = @low_card_model.columns.detect { |c| c.name.to_s.strip.downcase == missing_column_name.to_s.strip.downcase }
           if column && column.default
             the_default = column.default
-            the_default = column.type_cast_from_database(the_default) if column.respond_to?(:type_cast_from_database)
+            the_default = type_cast(column, the_default)
             hash[column.name] = the_default
             false
           else
