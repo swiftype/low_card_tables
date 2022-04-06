@@ -73,6 +73,7 @@ module LowCardTables
       end
 
       module ClassMethods
+        STI_ACTIVERECORD_BREAKING_VERSION = 5
         # Several methods go straight to the LowCardAssociationsManager.
         delegate :has_low_card_table, :_low_card_association, :_low_card_update_collapsed_rows, :low_card_value_collapsing_update_scheme, :to => :_low_card_associations_manager
 
@@ -125,6 +126,26 @@ module LowCardTables
           end
 
           super(record) if call_super
+        end
+
+        def find_sti_class(type_name)
+          if ::ActiveRecord::VERSION::STRING.to_f < STI_ACTIVERECORD_BREAKING_VERSION
+            super(type_name)
+          else
+            begin
+              if store_full_sti_class
+                ActiveSupport::Dependencies.constantize(type_name)
+              else
+                compute_type(type_name)
+              end
+            rescue NameError
+              raise SubclassNotFound,
+                "The single-table inheritance mechanism failed to locate the subclass: '#{type_name}'. " +
+                "This error is raised because the column '#{inheritance_column}' is reserved for storing the class in case of inheritance. " +
+                "Please rename this column if you didn't intend it to be used for storing the inheritance class " +
+                "or overwrite #{name}.inheritance_column to use another column for that information."
+            end
+          end
         end
 
         if ::LowCardTables::VersionSupport.sti_uses_discriminate_class_for_record?
