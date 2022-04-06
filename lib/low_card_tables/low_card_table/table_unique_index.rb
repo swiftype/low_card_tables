@@ -7,6 +7,8 @@ module LowCardTables
     # This class started as code that was directly part of the RowManager, and was factored out to create this class
     # instead -- simply so that the RowManager wouldn't have any more code in it than necessary.
     class TableUniqueIndex
+      MIGRATION_CLASS_BREAKING_VERSION = 5
+
       # Creates a new instance for the low-card model class in question.
       def initialize(low_card_model)
         unless low_card_model.respond_to?(:is_low_card_table?) && low_card_model.is_low_card_table?
@@ -77,7 +79,7 @@ We're looking for an index on the following columns:
       end
 
       def migrate(&block)
-        migration_class = Class.new(::ActiveRecord::Migration)
+        migration_class = Class.new(migration_class_parent)
         metaclass = migration_class.class_eval { class << self; self; end }
         metaclass.instance_eval { define_method(:up, &block) }
 
@@ -87,6 +89,12 @@ We're looking for an index on the following columns:
 
         low_card_model.reset_column_information
         LowCardTables::VersionSupport.clear_schema_cache!(low_card_model)
+      end
+
+      def migration_class_parent
+        return ::ActiveRecord::Migration if ::ActiveRecord::VERSION::STRING.to_f < MIGRATION_CLASS_BREAKING_VERSION
+
+        ::ActiveRecord::Migration[::ActiveRecord::VERSION::STRING.to_f]
       end
 
       def create_unique_index!
