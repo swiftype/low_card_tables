@@ -123,7 +123,7 @@ module LowCardTables
 
         # Figure out which rows we need to delete; this is just all the losers.
         ids_to_delete = collapse_map.values.map { |row_array| row_array.map(&:id) }.flatten.sort
-        low_card_model.delete_all([ "id IN (:ids)", { :ids => ids_to_delete } ])
+        low_card_model.where(id: ids_to_delete).delete_all
 
         # Figure out what referring models we need to update.
         all_referring_models = low_card_model.low_card_referring_models | (additional_referring_models || [ ])

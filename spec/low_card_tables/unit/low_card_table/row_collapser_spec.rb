@@ -69,7 +69,8 @@ describe LowCardTables::LowCardTable::RowCollapser do
       context "actual collapsing" do
         before :each do
           expect(@low_card_model).to receive(:all).and_return([ @row1, @row2, @row3, @row4, @row5, @row6 ])
-          expect(@low_card_model).to receive(:delete_all).once.with([ "id IN (:ids)", { :ids => [ 2, 3, 5, 6 ]} ])
+          expect(@low_card_model).to receive(:where).with(id: [ 2, 3, 5, 6 ]).and_return(@low_card_model)
+          expect(@low_card_model).to receive(:delete_all).once
 
           @expected_collapse_map = { @row1 => [ @row2, @row3 ], @row4 => [ @row5, @row6 ]}
         end
