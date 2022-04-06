@@ -38,19 +38,11 @@ module LowCardTables
             klass.instance_eval %{
     default_scope { where(#{conditions.inspect}) }
 }
-          else
-            klass.instance_eval %{
-    default_scope { }
-}
           end
         else
           if conditions
             klass.instance_eval %{
     default_scope where(#{conditions.inspect})
-}
-          else
-            klass.instance_eval %{
-    default_scope nil
 }
           end
         end
