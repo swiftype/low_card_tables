@@ -364,7 +364,7 @@ describe "LowCardTables migration support" do
         new_status.id.should_not == status_1.id
         new_status.id.should > 0
 
-        ::UserStatus.delete_all("id = #{new_status.id}")
+        ::UserStatus.where(id: new_status.id).delete_all
       end
     end
   end

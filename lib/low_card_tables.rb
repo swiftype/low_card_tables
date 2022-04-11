@@ -42,7 +42,8 @@ class ActiveRecord::Migration
         migrate_without_low_card_connection_patching(*args, &block)
       end
 
-      alias_method_chain :migrate, :low_card_connection_patching
+      alias_method :migrate_without_low_card_connection_patching, :migrate
+      alias_method :migrate, :migrate_with_low_card_connection_patching
     end
   else
     def migrate_with_low_card_connection_patching(*args, &block)
@@ -50,7 +51,8 @@ class ActiveRecord::Migration
       migrate_without_low_card_connection_patching(*args, &block)
     end
 
-    alias_method_chain :migrate, :low_card_connection_patching
+    alias_method :migrate_without_low_card_connection_patching, :migrate
+    alias_method :migrate, :migrate_with_low_card_connection_patching
   end
 
   class << self

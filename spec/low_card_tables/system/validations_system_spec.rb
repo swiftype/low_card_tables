@@ -83,6 +83,6 @@ describe "LowCardTables validation support" do
     e.message.should match(/lctables_spec_user_statuses/mi)
     e.message.should match(/gender/mi)
     e.message.should match(/nil/mi)
-    e.message.should match(/ActiveRecord::StatementInvalid/mi)
+    e.message.should match(/ActiveRecord::StatementInvalid|ActiveRecord::NotNullViolation/mi)
   end
 end

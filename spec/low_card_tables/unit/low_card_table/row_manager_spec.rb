@@ -119,6 +119,10 @@ describe LowCardTables::LowCardTable::RowManager do
           raise "created a cache that we didn't expect to create"
         end
       end
+      connection = double('connection')
+      allow(::ActiveRecord::Base).to receive(:connection).and_return(connection)
+      allow(connection).to receive(:type_cast).with(nil, @column_foo).and_return(nil)
+      allow(connection).to receive(:type_cast).with('yohoho', @column_bar).and_return('yohoho')
 
       @expected_stale_calls = [ ]
       esc = @expected_stale_calls

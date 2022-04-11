@@ -70,7 +70,7 @@ describe LowCardTables::LowCardTable::TableUniqueIndex do
         allow(@connection).to receive(:indexes).with("foobar") { index_return_values.shift }
 
         our_migration_class = Class.new
-        allow(Class).to receive(:new).once.with(::ActiveRecord::Migration).and_return(our_migration_class)
+        allow(Class).to receive(:new).once.and_return(our_migration_class)
 
         expect(our_migration_class).to receive(:migrate).once.with(:up)
 
@@ -100,7 +100,7 @@ describe LowCardTables::LowCardTable::TableUniqueIndex do
         allow(@connection).to receive(:indexes).with("foobar") { index_return_values.shift }
 
         our_migration_class = Class.new
-        allow(Class).to receive(:new).once.with(::ActiveRecord::Migration).and_return(our_migration_class)
+        allow(Class).to receive(:new).once.and_return(our_migration_class)
 
         expect(our_migration_class).to receive(:migrate).once.with(:up)
 
