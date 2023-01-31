@@ -892,7 +892,7 @@ describe LowCardTables::LowCardTable::RowManager do
       expect(LowCardTables::LowCardTable::RowCollapser).to receive(:new).once.with(@low_card_model, { :abc => :def }).and_return(collapser)
 
       collapse_map = double("collapse_map")
-      expect(collapser).to receive(:collapse!).once.with().and_return(collapse_map)
+      expect(collapser).to receive(:collapse!).once.with(no_args).and_return(collapse_map)
 
       @instance.collapse_rows_and_update_referrers!(:abc => :def).should be(collapse_map)
 
