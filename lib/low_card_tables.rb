@@ -5,6 +5,7 @@ require "low_card_tables/version"
 require "low_card_tables/version_support"
 require 'low_card_tables/active_record/base'
 require 'low_card_tables/active_record/migrations'
+require 'low_card_tables/active_record/querying'
 require 'low_card_tables/active_record/relation'
 require 'low_card_tables/active_record/scoping'
 require 'low_card_tables/low_card_table/cache_expiration/has_cache_expiration'
@@ -28,6 +29,7 @@ end
 class ActiveRecord::Base
   include LowCardTables::ActiveRecord::Base
   include LowCardTables::ActiveRecord::Scoping
+  extend LowCardTables::ActiveRecord::Querying
 end
 
 # ActiveRecord migration methods (e.g., #create_table, #remove_column, etc.) are actually defined on the connection

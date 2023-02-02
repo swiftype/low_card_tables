@@ -28,7 +28,7 @@ module LowCardTables
       end
 
       def allows_static_scopes?
-        (::ActiveRecord::VERSION::MAJOR < 4) || (::ActiveRecord::VERSION::MINOR < 2)
+        ::ActiveRecord::VERSION::MAJOR < 6 && (::ActiveRecord::VERSION::MAJOR < 4 || ::ActiveRecord::VERSION::MINOR < 2)
       end
 
       # Define a default scope on the class in question. This is only actually used from our specs.

@@ -61,7 +61,7 @@ describe LowCardTables::ActiveRecord::Migrations do
         temp_class = Class.new
         expect(Class).to receive(:new).once.with(::ActiveRecord::Base).and_return(temp_class).ordered
         expect(temp_class).to receive(:table_name=).once.with(:foo).ordered
-        expect(temp_class).to receive(:is_low_card_table).once.with().ordered
+        expect(temp_class).to receive(:is_low_card_table).once.with(no_args).ordered
         expect(temp_class).to receive(:reset_column_information).once.ordered
 
         expect(temp_class).to receive(:low_card_remove_unique_index!).once.ordered
