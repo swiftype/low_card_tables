@@ -21,7 +21,7 @@ module LowCardTables
       # for LowCardTables::ActiveRecord::Migrations.
       def create_table_with_low_card_support(table_name, options = { }, &block)
         ::LowCardTables::ActiveRecord::Migrations.with_low_card_support(table_name, options) do |new_options|
-          create_table_without_low_card_support(table_name, new_options, &block)
+          create_table_without_low_card_support(table_name, **new_options, &block)
         end
       end
 
@@ -29,7 +29,7 @@ module LowCardTables
       # for LowCardTables::ActiveRecord::Migrations.
       def add_column_with_low_card_support(table_name, column_name, type, options = {})
         ::LowCardTables::ActiveRecord::Migrations.with_low_card_support(table_name, options) do |new_options|
-          add_column_without_low_card_support(table_name, column_name, type, options)
+          add_column_without_low_card_support(table_name, column_name, type, **options)
         end
       end
 
@@ -40,8 +40,11 @@ module LowCardTables
         ::LowCardTables::ActiveRecord::Migrations.with_low_card_support(table_name, options) do |new_options|
           args = [ table_name ]
           args += column_names
-          args << new_options if new_options && new_options.size > 0
-          remove_column_without_low_card_support(*args)
+          if new_options && new_options.size > 0
+            remove_column_without_low_card_support(*args, **new_options)
+          else
+            remove_column_without_low_card_support(*args)
+          end
         end
       end
 
@@ -51,7 +54,7 @@ module LowCardTables
         ::LowCardTables::ActiveRecord::Migrations.with_low_card_support(table_name, options) do |new_options|
           ar = method(:change_table_without_low_card_support).arity
           if ar > 1 || ar < -2
-            change_table_without_low_card_support(table_name, new_options, &block)
+            change_table_without_low_card_support(table_name, **new_options, &block)
           else
             change_table_without_low_card_support(table_name, &block)
           end
