@@ -1,5 +1,9 @@
 # `low_card_tables` Changelog
 
+## 1.1.4
+
+Add Ruby 3 support
+
 ## 1.1.3
 
 Add Rails 6 support
