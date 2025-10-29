@@ -39,7 +39,7 @@ describe LowCardTables::ActiveRecord::Migrations do
 
   it "should pass through correctly for :create_table" do
     @migration.create_table(:foo, @opts, &@proc)
-    @migration.calls.should == [ { :name => :create_table, :args => [ :foo, @opts ], :block => @proc } ]
+    @migration.calls.should == [ { :name => :create_table, :args => [ :foo ], :block => @proc } ]
   end
 
   context "with mock ::Rails" do
@@ -74,7 +74,7 @@ describe LowCardTables::ActiveRecord::Migrations do
         expect(temp_class).to receive(:low_card_ensure_has_unique_index!).once.with(true).ordered
 
         @migration.create_table(:foo, @opts, &@proc)
-        @migration.calls.should == [ { :name => :create_table, :args => [ :foo, { } ], :block => @proc } ]
+        @migration.calls.should == [ { :name => :create_table, :args => [ :foo ], :block => @proc } ]
       end
     end
 

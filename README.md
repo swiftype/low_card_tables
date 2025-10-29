@@ -77,3 +77,11 @@ Create the models:
 And boom, you're done. Any columns present on `user_statuses` will appear as virtual columns on `User` &mdash; for reading and writing, for queries, for scopes, for validations, and so on.
 
 Please see [the Wiki](https://github.com/ageweke/low_card_tables/wiki) for further documentation!
+
+#### Running tests
+
+(ensure mysql is running)
+
+```sh
+LOW_CARD_TABLES_TRAVIS_CI_DATABASE_TYPE=mysql LOW_CARD_TABLES_AR_TEST_VERSION=6.1.7.9 bundle exec rspec
+```

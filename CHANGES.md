@@ -1,5 +1,11 @@
 # `low_card_tables` Changelog
 
+## 1.1.5
+
+* Add Rails 7 support
+* Remove Ruby 1.8 support
+* RSpec: Ruby 3 support
+
 ## 1.1.4
 
 Add Ruby 3 support
@@ -8,12 +14,11 @@ Add Ruby 3 support
 
 Add Rails 6 support
 
-## 1.1.2,
+## 1.1.2
 
 Add Rails 5 support
 
-
-## 1.1.1,
+## 1.1.1
 
 * Fixed an issue where, if you installed another ActiveRecord-related gem installed that defined a method `primary_keys` on a model that returned an empty array, `low_card_tables` would incorrectly behave as if the low-card table had no primary key at all, and expect you to include `id` in the all-columns index.
 
