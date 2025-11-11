@@ -121,8 +121,9 @@ describe LowCardTables::LowCardTable::RowManager do
       end
       connection = double('connection')
       allow(::ActiveRecord::Base).to receive(:connection).and_return(connection)
-      allow(connection).to receive(:type_cast).with(nil, @column_foo).and_return(nil)
-      allow(connection).to receive(:type_cast).with('yohoho', @column_bar).and_return('yohoho')
+      allow(connection).to receive(:lookup_cast_type_from_column).and_return(nil)
+      allow(connection).to receive(:type_cast).with(nil).and_return(nil)
+      allow(connection).to receive(:type_cast).with('yohoho').and_return('yohoho')
 
       @expected_stale_calls = [ ]
       esc = @expected_stale_calls
@@ -494,7 +495,8 @@ describe LowCardTables::LowCardTable::RowManager do
 
       context "with setup to actually run import" do
         before :each do
-          connection = double("connection")
+          connection = double('connection')
+          allow(connection).to receive(:lookup_cast_type_from_column).and_return(nil)
           allow(@low_card_model).to receive(:connection).and_return(connection)
           allow(connection).to receive(:quote_table_name) { |tn| "<#{tn}>" }
           connection_class = double("connection_class")
@@ -683,7 +685,8 @@ describe LowCardTables::LowCardTable::RowManager do
 
       context "with setup to actually run import" do
         before :each do
-          connection = double("connection")
+          connection = double('connection')
+          allow(connection).to receive(:lookup_cast_type_from_column).and_return(nil)
           allow(@low_card_model).to receive(:connection).and_return(connection)
           allow(connection).to receive(:quote_table_name) { |tn| "<#{tn}>" }
           connection_class = double("connection_class")

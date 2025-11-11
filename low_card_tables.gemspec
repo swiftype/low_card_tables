@@ -24,26 +24,26 @@ Gem::Specification.new do |s|
   ar_version = ENV['LOW_CARD_TABLES_AR_TEST_VERSION']
   ar_version = ar_version.strip if ar_version
 
-  version_spec = case ar_version
-  when nil then [ ">= 3.0", "< 7" ]
-  when 'master' then nil
-  else [ "=#{ar_version}" ]
-  end
+  version_spec =
+    case ar_version
+    when nil then [ ">= 3.0", "< 7.0" ]
+    when 'master' then nil
+    else [ "=#{ar_version}" ]
+    end
 
   if version_spec
     s.add_dependency("activerecord", *version_spec)
   end
 
-  s.add_dependency "activesupport", ">= 3.0", "< 7"
+  s.add_dependency "activesupport", ">= 3.0", "< 7.0"
 
-  ar_import_version = case ar_version
-  when nil then nil
-  when /^4\.2\./ then '~> 0.7.0'
-  when 'master', /^4\.0\./, /^4\.1\./ then '~> 0.4.1'
-  when /^3\.0\./ then '~> 0.2.11'
-  when /^3\.1\./, /^3\.2\./ then '~> 0.3.1'
-  else raise "Don't know what activerecord-import version to require for activerecord version #{ar_version.inspect}!"
-  end
+  ar_import_version =
+    case ar_version
+    when nil then nil
+    when /^6\.1\./ then '~> 1.0.3'
+    when /^7\.0\./ then '~> 1.3.0'
+    else raise "Don't know what activerecord-import version to require for activerecord version #{ar_version.inspect}!"
+    end
 
   if ar_import_version
     s.add_dependency("activerecord-import", ar_import_version)
@@ -51,22 +51,7 @@ Gem::Specification.new do |s|
     s.add_dependency("activerecord-import")
   end
 
-  # i18n released an 0.7.0 that's incompatible with Ruby 1.8.
-  if RUBY_VERSION =~ /^1\.8\./
-    s.add_development_dependency 'i18n', '< 0.7.0'
-  end
-
   require File.expand_path(File.join(File.dirname(__FILE__), 'spec', 'low_card_tables', 'helpers', 'database_helper'))
   database_gem_name = LowCardTables::Helpers::DatabaseHelper.maybe_database_gem_name
-
-  # Ugh. Later versions of the 'mysql2' gem are incompatible with AR 3.0.x; so, here, we explicitly trap that case
-  # and use an earlier version of that Gem.
-  if database_gem_name && database_gem_name == 'mysql2' && ar_version && ar_version =~ /^3\.0\./
-    s.add_development_dependency(database_gem_name, '~> 0.2.0')
-  # The 'pg' gem removed Ruby 1.8 compatibility as of 0.18.
-  elsif database_gem_name && database_gem_name == 'pg' && RUBY_VERSION =~ /^1\.8\./
-    s.add_development_dependency(database_gem_name, '< 0.18.0')
-  else
-    s.add_development_dependency(database_gem_name)
-  end
+  s.add_development_dependency(database_gem_name) if database_gem_name
 end

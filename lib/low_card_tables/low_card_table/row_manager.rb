@@ -127,8 +127,23 @@ module LowCardTables
         elsif column.respond_to?(:type_cast)
           column.type_cast(value)
         else
-          ::ActiveRecord::Base.connection.type_cast(value, column) || value
+          legacy_type_cast(value, column) || value
         end
+      end
+
+      def legacy_type_cast(value, column = nil)
+        if value.is_a?(::ActiveRecord::Base)
+          # Passing an Active Record object to `type_cast` directly is deprecated and will be no longer type casted as id value in Rails 7.0.
+          value = value.id_for_database
+        end
+
+        if column
+          # Passing a column to `type_cast` is deprecated and will be removed in Rails 7.0.
+          type = ::ActiveRecord::Base.connection.lookup_cast_type_from_column(column)
+          value = type.serialize(value) if type
+        end
+
+        ::ActiveRecord::Base.connection.type_cast(value)
       end
 
       # Given a single Hash specifying zero or more constraints for low-card rows (i.e., mapping zero or more columns
